@@ -2,6 +2,7 @@ import { AuthenticatedRequest } from "@/middlewares";
 import { Response } from "express";
 import httpStatus from "http-status";
 import paymentsService from "@/services/payments-service";
+import { cardData } from "@/protocols";
 
 export async function getPayments(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -25,12 +26,11 @@ export async function getPayments(req: AuthenticatedRequest, res: Response) {
 
 export async function postPayments(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const cardData = req.body.cardData;
-  const ticketId = req.body.ticketId;
+  const cardData: cardData = req.body.cardData;
+  const ticketId: number = req.body.ticketId;
 
-  if(!cardData) { return res.status(400).send("BAD REQUEST"); } 
   try {
-    const payment = await paymentsService.postPayment(ticketId, userId, cardData.issuer, cardData.number );
+    const payment = await paymentsService.postPayment(ticketId, userId, cardData );
     res.status(200).send(payment);
   }catch(error) {
     if (error.name === "NotFoundError") {

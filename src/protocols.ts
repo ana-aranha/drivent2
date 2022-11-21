@@ -19,7 +19,6 @@ export type AddressEnrollment = {
   cidade: string,
   uf: string,
   error?: string
-
 }
 
 export type RequestError = {
@@ -28,4 +27,12 @@ export type RequestError = {
   statusText: string,
   name: string,
   message: string,
+};
+
+export type cardData = {
+		issuer: string,
+    number: number | string,
+    name: string,
+    expirationDate: Date | string,
+    cvv: string
 };
