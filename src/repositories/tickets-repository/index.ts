@@ -26,7 +26,7 @@ async function insertTicket( ticket: NewTicket) {
 } 
 
 async function findTicketTypeById(id: number) {
-  return prisma.ticketType.findFirst({
+  return prisma.ticketType.findUnique({
     where: { id }
   });
 }

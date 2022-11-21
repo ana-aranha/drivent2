@@ -1,4 +1,4 @@
-import { notFoundError } from "@/errors";
+import { notFoundError, requestError } from "@/errors";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketsRepository from "@/repositories/tickets-repository";
 
@@ -27,6 +27,7 @@ async function getTicketsByUserId(userId: number) {
 }
 
 async function createTicketByTicketTypeId(ticketTypeId: number, userId: number) {
+  if(!ticketTypeId) throw requestError(400, "BadRequest");
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
   if(!enrollment) throw notFoundError();
@@ -38,8 +39,6 @@ async function createTicketByTicketTypeId(ticketTypeId: number, userId: number) 
   const result = { ...ticket, TicketType: ticketType };
   return result;
 }
-
-/*   const ticket = await ticketsRepository.findTicketByUserId(userId);*/
 
 const ticketsService = {
   getTicketsTypeArr,

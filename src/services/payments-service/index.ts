@@ -4,6 +4,7 @@ import paymentsRepository from "@/repositories/payments-repository";
 import ticketsRepository from "@/repositories/tickets-repository";
 
 async function getPaymentByTicketId(ticketId: number, userId: number) {
+  if(!ticketId) throw requestError(400, "BadRequest");
   await findAndValidateTicket(ticketId, userId);
 
   const payment = await paymentsRepository.findPaymentByTicketId(ticketId);
@@ -14,6 +15,8 @@ async function getPaymentByTicketId(ticketId: number, userId: number) {
 }
 
 async function postPayment( ticketId: number, userId: number, cardIssuer: string, number: string) {
+  if(!ticketId ) throw requestError(400, "BadRequest");
+  
   const ticket = await findAndValidateTicket(ticketId, userId);
   const ticketType = await ticketsRepository.findTicketTypeById(ticket.ticketTypeId);
 

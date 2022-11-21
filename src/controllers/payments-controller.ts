@@ -7,7 +7,6 @@ export async function getPayments(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const ticketId = Number(req.query.ticketId);
 
-  if(!ticketId) { return res.status(400).send("BAD REQUEST"); }
   try{
     const payment = await paymentsService.getPaymentByTicketId(ticketId, userId);
     res.status(200).send(payment);
@@ -18,7 +17,7 @@ export async function getPayments(req: AuthenticatedRequest, res: Response) {
     if(error.name === "UnauthorizedError") {
       return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
-    if(error.name === "BadRequest") {
+    if(error.name === "RequestError") {
       return res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
@@ -29,7 +28,7 @@ export async function postPayments(req: AuthenticatedRequest, res: Response) {
   const cardData = req.body.cardData;
   const ticketId = req.body.ticketId;
 
-  if(!cardData || !ticketId ) { return res.status(400).send("BAD REQUEST"); } 
+  if(!cardData) { return res.status(400).send("BAD REQUEST"); } 
   try {
     const payment = await paymentsService.postPayment(ticketId, userId, cardData.issuer, cardData.number );
     res.status(200).send(payment);
@@ -39,6 +38,9 @@ export async function postPayments(req: AuthenticatedRequest, res: Response) {
     }
     if(error.name === "UnauthorizedError") {
       return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    if(error.name === "RequestError") {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
     }
   }
 }
